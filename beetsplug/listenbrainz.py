@@ -88,8 +88,7 @@ class ListenBrainzPlugin(BeetsPlugin):
         """
         url = f"{self.ROOT}/user/{self.username}/listens"
         params = {
-            k: v
-            for k, v in {
+            k: v for k, v in {
                 "min_ts": min_ts,
                 "max_ts": max_ts,
                 "count": count,
