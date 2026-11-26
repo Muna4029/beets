@@ -48,8 +48,9 @@ class ListenBrainzPlugin(BeetsPlugin):
             found_total += found
             unknown_total += unknown
         log.info("... done!")
-        log.info("{0} unknown play-counts", unknown_total)
-        log.info("{0} play-counts imported", found_total)
+        # Use f-strings for correct message formatting with the beets logger
+        log.info(f"{unknown_total} unknown play-counts")
+        log.info(f"{found_total} play-counts imported")
 
     def _make_request(self, url, params=None):
         """Makes a request to the ListenBrainz API."""
@@ -106,6 +107,8 @@ class ListenBrainzPlugin(BeetsPlugin):
     def get_tracks_from_listens(self, listens):
         """Returns a list of tracks from a list of listens."""
         tracks = []
+        if not listens:
+            return tracks
         for track in listens:
             if track["track_metadata"].get("release_name") is None:
                 continue
@@ -114,6 +117,8 @@ class ListenBrainzPlugin(BeetsPlugin):
             if mbid_mapping.get("recording_mbid") is None:
                 # search for the track using title and release
                 mbid = self.get_mb_recording_id(track)
+            else:
+                mbid = mbid_mapping.get("recording_mbid")
             tracks.append(
                 {
                     "album": {
